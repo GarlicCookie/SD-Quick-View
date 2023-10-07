@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <RootNamespace>SD_Quick_View</RootNamespace>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Title>SD-Quick-View</Title>
+    <Version>1.0</Version>
+    <Authors>$(AssemblyName), GarlicCookie</Authors>
+    <Company>$(Authors), GarlicCookie</Company>
+    <Description>SD-Quick-View by GarlicCookie</Description>
+    <Copyright>© 2023 - GNU GPL3, see GitHub for details</Copyright>
+    <ApplicationIcon>00268-745630302.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="00268-745630302.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MetadataExtractor" Version="2.8.1" />
+  </ItemGroup>
+
+</Project>

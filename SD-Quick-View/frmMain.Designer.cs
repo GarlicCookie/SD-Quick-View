@@ -38,7 +38,12 @@
             this.label1 = new System.Windows.Forms.Label();
             this.margVal = new System.Windows.Forms.TrackBar();
             this.txtParams = new System.Windows.Forms.TextBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.margVal)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // flpThumbnails
@@ -49,10 +54,10 @@
             this.flpThumbnails.AutoScroll = true;
             this.flpThumbnails.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.flpThumbnails.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.flpThumbnails.Location = new System.Drawing.Point(13, 129);
+            this.flpThumbnails.Location = new System.Drawing.Point(4, 5);
             this.flpThumbnails.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.flpThumbnails.Name = "flpThumbnails";
-            this.flpThumbnails.Size = new System.Drawing.Size(796, 616);
+            this.flpThumbnails.Size = new System.Drawing.Size(893, 672);
             this.flpThumbnails.TabIndex = 7;
             // 
             // btnPickDirectory
@@ -109,22 +114,41 @@
             // 
             // txtParams
             // 
-            this.txtParams.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.txtParams.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtParams.Location = new System.Drawing.Point(816, 129);
+            this.txtParams.Location = new System.Drawing.Point(3, 5);
             this.txtParams.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtParams.Multiline = true;
             this.txtParams.Name = "txtParams";
-            this.txtParams.Size = new System.Drawing.Size(484, 616);
+            this.txtParams.Size = new System.Drawing.Size(372, 672);
             this.txtParams.TabIndex = 9;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Location = new System.Drawing.Point(13, 119);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.flpThumbnails);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.txtParams);
+            this.splitContainer1.Size = new System.Drawing.Size(1283, 682);
+            this.splitContainer1.SplitterDistance = 901;
+            this.splitContainer1.TabIndex = 10;
             // 
             // frmMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1312, 765);
-            this.Controls.Add(this.txtParams);
+            this.ClientSize = new System.Drawing.Size(1312, 813);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.margVal);
-            this.Controls.Add(this.flpThumbnails);
             this.Controls.Add(this.btnPickDirectory);
             this.Controls.Add(this.txtDirectory);
             this.Controls.Add(this.label1);
@@ -134,6 +158,11 @@
             this.Text = "SD Quick View";
             this.Load += new System.EventHandler(this.frmMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.margVal)).EndInit();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -149,5 +178,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TrackBar margVal;
         private System.Windows.Forms.TextBox txtParams;
+        private SplitContainer splitContainer1;
     }
 }

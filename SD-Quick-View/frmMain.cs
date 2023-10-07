@@ -3,9 +3,8 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using MetadataExtractor;
-
-
-
+using System.Windows.Forms.Design;
+using System.DirectoryServices.ActiveDirectory;
 
 namespace SD_Quick_View
 {
@@ -19,6 +18,7 @@ namespace SD_Quick_View
         private int ThumbWidth = 10;
         private int ThumbHeight = 10;
         private int ThumbMultiplier = 5;
+        private string metaholder = "";
 
         // Import used for tooltip
         [DllImport("Shlwapi.dll", CharSet = CharSet.Auto)]
@@ -37,11 +37,84 @@ namespace SD_Quick_View
         // Start with the startup path selected.
         private void frmMain_Load(object sender, EventArgs e)
         {
-            // Comment out these three lines if desired to have the application start with empty path
-            string path = Path.Combine(Application.StartupPath, "..\\..");
-            DirectoryInfo dir_info = new DirectoryInfo(path);
-            txtDirectory.Text = dir_info.FullName;
+            if (File.Exists("SD-Quick-View.cfg") == true)
+            {
+                loadSettings();
+            }
+            else
+            {
+                // Starting path same as program location
+                string path = Path.Combine(Application.StartupPath, "..\\..");
+                DirectoryInfo dir_info = new DirectoryInfo(path);
+                txtDirectory.Text = dir_info.FullName;
+            }
         }
+
+
+
+        public async Task saveSettings()
+        {
+
+            string[] lines =
+            {
+                "SD-Quick-View Settings File.  Do not Modify!  Deleting this file will reset your settings.",
+                "------------------",
+                margVal.Value.ToString(),
+                txtDirectory.Text
+            };
+            try
+            {
+                await File.WriteAllLinesAsync("SD-Quick-View.cfg", lines);
+                txtParams.Text = "Settings saved to disk.";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to save file." + ex.ToString());
+            }
+        }
+
+
+        private void loadSettings()
+        {
+            // Check for file
+            if (File.Exists("SD-Quick-View.cfg") == false)
+            {
+                return;
+            }
+
+            try
+            {
+                // Read file
+                string[] lines = System.IO.File.ReadAllLines(@"SD-Quick-View.cfg");
+
+                if (lines.Length != 4)
+                {
+                    // unexpected cfg length
+                    MessageBox.Show("Your config file is an unexpected length.  Loading default.");
+                    return;
+                }
+
+                margVal.Value = int.Parse(lines[2]);
+                txtDirectory.Text = lines[3];
+                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Your config file is corrupt.  It is suggested to remove it.  A new one will be generated the next time you launch the program." + ex.ToString());
+                return;
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -74,7 +147,9 @@ namespace SD_Quick_View
                 // Remove events              
                 pic.DoubleClick -= PictureBox_DoubleClick!;
                 pic.Click -= PictureBox_Click!;
-                pic.MouseEnter -= PictureBox_MouseOver!;
+                pic.MouseEnter -= PictureBox_MouseEnter!;
+                pic.MouseDown -= PictureBox_MouseDown!;
+                pic.MouseUp -= PictureBox_MouseUp!;
                 pic.Dispose();
                 
                 
@@ -154,7 +229,9 @@ namespace SD_Quick_View
                     pic.DoubleClick += PictureBox_DoubleClick!;
 
                     // Add mouseover handler
-                    pic.MouseEnter += PictureBox_MouseOver!;
+                    pic.MouseEnter += PictureBox_MouseEnter!;
+                    pic.MouseDown += PictureBox_MouseDown!;
+                    pic.MouseUp += PictureBox_MouseUp!;
 
                     // Add a tooltip.
                     FileInfo file_info = new FileInfo(filename);
@@ -162,7 +239,9 @@ namespace SD_Quick_View
                         "\nCreated: " + file_info.CreationTime.ToShortDateString() +
                         "\n(" + pic.Image.Width + " x " + pic.Image.Height + ") " +
                         ToFileSizeApi(file_info.Length));
+                    
                     pic.Tag = file_info;
+                                       
 
                     // Add the PictureBox to the FlowLayoutPanel.
                     pic.Parent = flpThumbnails;
@@ -181,32 +260,44 @@ namespace SD_Quick_View
             return sb.ToString();
         }
 
-        private void PictureBox_MouseOver(object sender, EventArgs e)
+        private void PictureBox_MouseEnter(object sender, EventArgs e)
         {
             PictureBox pic = sender as PictureBox ?? throw new ArgumentException(); ;
             FileInfo file_into = pic.Tag as FileInfo ?? throw new ArgumentException(); 
             showData(file_into);
+        }
 
+
+        private void PictureBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            PictureBox pic = sender as PictureBox ?? throw new ArgumentException(); ;
+            pic.BorderStyle = BorderStyle.None;
+            
+        }
+
+        private void PictureBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            PictureBox pic = sender as PictureBox ?? throw new ArgumentException(); ;
+            pic.BorderStyle = BorderStyle.Fixed3D;
         }
 
         private void PictureBox_Click(object sender, EventArgs e)
         {
             // Save params to clipboard
             // Grab the full prompt text, leave if it is empty
-            string s = txtParams.Text;
+            string s = metaholder;
             if (s == "") { return; }
 
             // Copies to clipboard
             Clipboard.SetText(s);
-
         }
 
         // Open the file.
         private void PictureBox_DoubleClick(object sender, EventArgs e)
         {
             // Get the file's information.
-            PictureBox pic = sender as PictureBox ?? throw new ArgumentException(); ;
-            FileInfo file_into = pic.Tag as FileInfo ?? throw new ArgumentException(); ;
+            PictureBox pic = sender as PictureBox ?? throw new ArgumentException(); 
+            FileInfo file_into = pic.Tag as FileInfo ?? throw new ArgumentException(); 
 
             // "Start" the file.
             //Process.Start(file_into.FullName);
@@ -219,11 +310,13 @@ namespace SD_Quick_View
         private void margVal_MouseUp(object sender, MouseEventArgs e)
         {
             txtDirectory_TextChanged(txtDirectory.Text, e);
+            flpThumbnails.Focus();
         }
 
         private void margVal_KeyUp(object sender, KeyEventArgs e)
         {
             txtDirectory_TextChanged(txtDirectory.Text, e);
+            flpThumbnails.Focus();
         }
 
 
@@ -243,8 +336,12 @@ namespace SD_Quick_View
                         //textBox1.Text += ($"{directory.Name} \r\n - {tag.Name} = {tag.Description}");
                         //textBox1.Text += "\n";
 
+                        // Grab unparsed text for copy and load ease
+                        metaholder = ($"{tag.Description}").Replace("parameters: ", "");
+
                         // Parse text
-                        string parsed = ($"{tag.Description}").Replace("Negative prompt:", "\r\n\r\nNegative Prompt:");
+                        string parsed = ($"{tag.Description}").Replace("parameters: ", "");
+                        parsed = parsed.Replace("Negative prompt:", "\r\n\r\nNegative Prompt:");
                         parsed = parsed.Replace("Steps:", "\r\n\r\nSteps:");
                         parsed = parsed.Replace("Sampler:", "\r\nSampler:");
                         parsed = parsed.Replace("CFG scale:", "\r\nCFG scale:");
@@ -259,5 +356,12 @@ namespace SD_Quick_View
                     }
                 }
         }
+
+        private async void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            await  saveSettings();
+        }
+
+      
     }
 }

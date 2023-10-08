@@ -272,7 +272,20 @@ namespace SD_Quick_View
         {
             PictureBox pic = sender as PictureBox ?? throw new ArgumentException(); ;
             pic.BorderStyle = BorderStyle.None;
-            
+
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    // Left click
+                    break;
+
+                case MouseButtons.Right:
+                    // Right click
+                    FileInfo file_into = pic.Tag as FileInfo ?? throw new ArgumentException();
+                    Process.Start("explorer.exe", file_into.FullName);
+                    break;
+            }
+
         }
 
         private void PictureBox_MouseDown(object sender, MouseEventArgs e)
@@ -292,7 +305,7 @@ namespace SD_Quick_View
             Clipboard.SetText(s);
         }
 
-        // Open the file.
+        // Open the file.  (This doesn't work because of changing the border on the click event.  Oh well.  Moved it to a right-click on the MouseUp event.
         private void PictureBox_DoubleClick(object sender, EventArgs e)
         {
             // Get the file's information.
@@ -306,6 +319,8 @@ namespace SD_Quick_View
             Process.Start("explorer.exe", file_into.FullName);
 
         }
+
+
 
         private void margVal_MouseUp(object sender, MouseEventArgs e)
         {

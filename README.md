@@ -6,7 +6,7 @@ My other program, PNG-SD-Info-Viewer, was focused more on image curation and oth
 
 Simply load in the folder of interest and hover your mouse over the images to see their SD metadata.  Use the slider to adjust thumbnail size.
 
-Click an image to copy the current metadata to clipboard.  Double-click to open the image.
+Click an image to copy the current metadata to clipboard.  Right-click to open the image.
 
 That's all there is to it! :)
  

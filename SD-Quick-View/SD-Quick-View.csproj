@@ -8,7 +8,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Title>SD-Quick-View</Title>
-    <Version>1.2</Version>
+    <Version>1.3</Version>
     <Authors>$(AssemblyName), GarlicCookie</Authors>
     <Company>$(Authors), GarlicCookie</Company>
     <Description>SD-Quick-View by GarlicCookie</Description>

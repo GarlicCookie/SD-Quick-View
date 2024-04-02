@@ -284,6 +284,15 @@ namespace SD_Quick_View
                     FileInfo file_into = pic.Tag as FileInfo ?? throw new ArgumentException();
                     Process.Start("explorer.exe", file_into.FullName);
                     break;
+
+                case MouseButtons.Middle:
+                    // Middle click
+                    if (pic.Image != null)
+                    {
+                        // Copy if image is loaded
+                        Clipboard.SetImage(pic.Image);
+                    }
+                    break;
             }
 
         }
